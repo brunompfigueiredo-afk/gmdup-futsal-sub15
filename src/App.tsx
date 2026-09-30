@@ -10,35 +10,20 @@ export default function App() {
   const [utilizadorLogado, setUtilizadorLogado] = useState<any>(null);
   const [atletaSelecionado, setAtletaSelecionado] = useState<any>(null);
 
-  // Estados globais para ordenação de colunas em cada tabela
+  // Estados para ordenação de colunas em cada tabela
   const [ordenarColuna, setOrdenarColuna] = useState<string>('nome');
   const [direcaoOrdem, setDirecaoOrdem] = useState<'asc' | 'desc'>('asc');
 
   const [ordenarColunaPMC, setOrdenarColunaPMC] = useState<string>('nome');
   const [direcaoOrdemPMC, setDirecaoOrdemPMC] = useState<'asc' | 'desc'>('asc');
 
-  const [ordenarColunaCal, setOrdenarColunaCal] = useState<string>('data');
-  const [direcaoOrdemCal, setDirecaoOrdemCal] = useState<'asc' | 'desc'>('asc');
-
   const [ordenarColunaClinico, setOrdenarColunaClinico] = useState<string>('nome');
   const [direcaoOrdemClinico, setDirecaoOrdemClinico] = useState<'asc' | 'desc'>('asc');
-
-  const [ordenarColunaFis, setOrdenarColunaFis] = useState<string>('nome');
-  const [direcaoOrdemFis, setDirecaoOrdemFis] = useState<'asc' | 'desc'>('asc');
-
-  const [ordenarColunaTreino, setOrdenarColunaTreino] = useState<string>('nome');
-  const [direcaoOrdemTreino, setDirecaoOrdemTreino] = useState<'asc' | 'desc'>('asc');
-
-  const [ordenarColunaConv, setOrdenarColunaConv] = useState<string>('nome');
-  const [direcaoOrdemConv, setDirecaoOrdemConv] = useState<'asc' | 'desc'>('asc');
-
-  const [ordenarColunaStats, setOrdenarColunaStats] = useState<string>('nome');
-  const [direcaoOrdemStats, setDirecaoOrdemStats] = useState<'asc' | 'desc'>('asc');
 
   // Atletas convocados para o próximo jogo
   const [convocados, setConvocados] = useState<number[]>([5, 10, 18, 19, 22, 1, 4, 8, 12, 13, 15, 16, 17, 20]);
 
-  // Histórico de Antropometria
+  // Histórico de Antropometria Temporal
   const [historicoAntropometria, sethistoricoAntropometria] = useState([
     { id: 1, data: "2026-09-01", atletaId: 1, atletaNome: "Agostinho", peso: 58.5, altura: 1.70, imc: 20.2, massaGorda: 11.5 },
     { id: 2, data: "2026-09-01", atletaId: 5, atletaNome: "Diogo", peso: 62.0, altura: 1.75, imc: 20.2, massaGorda: 10.8 },
@@ -86,13 +71,16 @@ export default function App() {
     { id: 22, nome: "Éder", posicao: "Ala", nasc: "2011-01-10", idade: 15, pesoBase: 64.5, peso: 65.5, altura: 1.79, cmjBase: 40.0, cmj: 41.8, pa: "124/82", fcRep: 54, phvOffset: "+2.0", treinos: 11, minTreino: 1095, jogos: 6, minJogo: 123, titular: 3, suplente: 3, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, ctl: 75, atl: 98, tsb: -23, acwr: 1.31, rpeMedio: 8.6, cargaSessao: 850, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Plano de alto rendimento estrito", notas: "Um dos motores da equipa em termos físicos e competitivos." }
   ]);
 
-  // Estado para Calendário Operacional e Sessões
+  // Estado para Calendário Operacional em Modo Mensal
+  const [mesCalendario, setMesCalendario] = useState("2026-10");
   const [calendarioSessoes, setCalendarioSessoes] = useState([
     { id: 1, data: "2026-10-02", tipo: "Treino Tático", tss: 65, desc: "Sessão de transições e posicionamento defensivo." },
     { id: 2, data: "2026-10-03", tipo: "Descanso Total", tss: 0, desc: "Recuperação neuromuscular (TSS = 0)." },
     { id: 3, data: "2026-10-04", tipo: "Treino Físico (Força/CMJ)", tss: 80, desc: "Circuitos de potência e prevenção de lesões." },
     { id: 4, data: "2026-10-05", tipo: "Jogo Oficial", tss: 120, desc: "7ª Jornada Campeonato Sub-15 Futsal (Pico Ótimo)." },
-    { id: 5, data: "2026-10-06", tipo: "Jogo Amigável / Treino", tss: 70, desc: "Jogo de rotação massiva para os 22 atletas." }
+    { id: 5, data: "2026-10-06", tipo: "Jogo Amigável / Treino", tss: 70, desc: "Jogo de rotação massiva para os 22 atletas." },
+    { id: 6, data: "2026-10-10", tipo: "Treino Tático", tss: 65, desc: "Ajustes na saída sob pressão." },
+    { id: 7, data: "2026-10-12", tipo: "Descanso Total", tss: 0, desc: "Descanso absoluto." }
   ]);
 
   const [novoTreino, setNovoTreino] = useState({
@@ -154,47 +142,12 @@ export default function App() {
         setOrdenarColunaPMC(coluna);
         setDirecaoOrdemPMC('asc');
       }
-    } else if (tipoTabela === 'calendario') {
-      if (ordenarColunaCal === coluna) {
-        setDirecaoOrdemCal(direcaoOrdemCal === 'asc' ? 'desc' : 'asc');
-      } else {
-        setOrdenarColunaCal(coluna);
-        setDirecaoOrdemCal('asc');
-      }
     } else if (tipoTabela === 'clinico') {
       if (ordenarColunaClinico === coluna) {
         setDirecaoOrdemClinico(direcaoOrdemClinico === 'asc' ? 'desc' : 'asc');
       } else {
         setOrdenarColunaClinico(coluna);
         setDirecaoOrdemClinico('asc');
-      }
-    } else if (tipoTabela === 'fisiologia') {
-      if (ordenarColunaFis === coluna) {
-        setDirecaoOrdemFis(direcaoOrdemFis === 'asc' ? 'desc' : 'asc');
-      } else {
-        setOrdenarColunaFis(coluna);
-        setDirecaoOrdemFis('asc');
-      }
-    } else if (tipoTabela === 'treino') {
-      if (ordenarColunaTreino === coluna) {
-        setDirecaoOrdemTreino(direcaoOrdemTreino === 'asc' ? 'desc' : 'asc');
-      } else {
-        setOrdenarColunaTreino(coluna);
-        setDirecaoOrdemTreino('asc');
-      }
-    } else if (tipoTabela === 'convocatoria') {
-      if (ordenarColunaConv === coluna) {
-        setDirecaoOrdemConv(direcaoOrdemConv === 'asc' ? 'desc' : 'asc');
-      } else {
-        setOrdenarColunaConv(coluna);
-        setDirecaoOrdemConv('asc');
-      }
-    } else if (tipoTabela === 'stats') {
-      if (ordenarColunaStats === coluna) {
-        setDirecaoOrdemStats(direcaoOrdemStats === 'asc' ? 'desc' : 'asc');
-      } else {
-        setOrdenarColunaStats(coluna);
-        setDirecaoOrdemStats('asc');
       }
     }
   };
@@ -217,15 +170,6 @@ export default function App() {
     return direcaoOrdemPMC === 'asc' ? valorA - valorB : valorB - valorA;
   });
 
-  const calendarioOrdenado = [...calendarioSessoes].sort((a: any, b: any) => {
-    let valorA = a[ordenarColunaCal];
-    let valorB = b[ordenarColunaCal];
-    if (typeof valorA === 'string') {
-      return direcaoOrdemCal === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
-    }
-    return direcaoOrdemCal === 'asc' ? valorA - valorB : valorB - valorA;
-  });
-
   const plantelOrdenadoClinico = [...plantel].sort((a: any, b: any) => {
     let valorA = a[ordenarColunaClinico];
     let valorB = b[ordenarColunaClinico];
@@ -233,42 +177,6 @@ export default function App() {
       return direcaoOrdemClinico === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
     }
     return direcaoOrdemClinico === 'asc' ? valorA - valorB : valorB - valorA;
-  });
-
-  const plantelOrdenadoFis = [...plantel].sort((a: any, b: any) => {
-    let valorA = a[ordenarColunaFis];
-    let valorB = b[ordenarColunaFis];
-    if (typeof valorA === 'string') {
-      return direcaoOrdemFis === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
-    }
-    return direcaoOrdemFis === 'asc' ? valorA - valorB : valorB - valorA;
-  });
-
-  const plantelOrdenadoTreino = [...plantel].sort((a: any, b: any) => {
-    let valorA = a[ordenarColunaTreino];
-    let valorB = b[ordenarColunaTreino];
-    if (typeof valorA === 'string') {
-      return direcaoOrdemTreino === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
-    }
-    return direcaoOrdemTreino === 'asc' ? valorA - valorB : valorB - valorA;
-  });
-
-  const plantelOrdenadoConv = [...plantel].sort((a: any, b: any) => {
-    let valorA = a[ordenarColunaConv];
-    let valorB = b[ordenarColunaConv];
-    if (typeof valorA === 'string') {
-      return direcaoOrdemConv === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
-    }
-    return direcaoOrdemConv === 'asc' ? valorA - valorB : valorB - valorA;
-  });
-
-  const plantelOrdenadoStats = [...plantel].sort((a: any, b: any) => {
-    let valorA = a[ordenarColunaStats];
-    let valorB = b[ordenarColunaStats];
-    if (typeof valorA === 'string') {
-      return direcaoOrdemStats === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
-    }
-    return direcaoOrdemStats === 'asc' ? valorA - valorB : valorB - valorA;
   });
 
   const abrirFichaAtleta = (atleta: any) => {
@@ -305,9 +213,8 @@ export default function App() {
     alert('Sessão / Evento adicionado ao Calendário Operacional com sucesso!');
   };
 
-  const simularAtualizacaoDados = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Módulo Update executado com sucesso! Dados sincronizados com o relatório athletes_report.xlsx e exportados.');
+  const simularImportacaoExcel = () => {
+    alert('Relatório athletes_report.xlsx importado com sucesso! 22 atletas atualizados[cite: 1].');
     setView('dashboard');
   };
 
@@ -531,7 +438,7 @@ export default function App() {
               <div onClick={() => setView('calendario')} style={cardModuleStyle}>
                 <div style={{ fontSize: '42px', marginBottom: '14px' }}>📅</div>
                 <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', marginBottom: '10px', ...text3DStyle }}>Calendário Operacional</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Gestão de treinos, TSS=0 para descanso e Jogos Oficiais vs Amigáveis.</p>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Calendário mensal, treinos, TSS=0 e Jogos Oficiais vs Amigáveis.</p>
               </div>
 
               <div onClick={() => setView('plantel')} style={cardModuleStyle}>
@@ -562,12 +469,6 @@ export default function App() {
                 <div style={{ fontSize: '42px', marginBottom: '14px' }}>📋</div>
                 <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', marginBottom: '10px', ...text3DStyle }}>Convocatórias</h3>
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Gestão de convocados para o próximo jogo e alinhamento.</p>
-              </div>
-
-              <div onClick={() => setView('treino')} style={cardModuleStyle}>
-                <div style={{ fontSize: '42px', marginBottom: '14px' }}>⚡</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px', ...text3DStyle }}>Carga & sRPE (CT)</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Monitorização de esforço, Carga de Treino (CT) e prontidão.</p>
               </div>
 
               <div onClick={() => setView('clinico')} style={cardModuleStyle}>
@@ -624,7 +525,7 @@ export default function App() {
                       <td style={{ padding: '18px 24px', textAlign: 'center', color: riscoLesao ? '#ef4444' : '#38bdf8', fontWeight: 'bold' }}>{atleta.acwr}</td>
                       <td style={{ padding: '18px 24px', textAlign: 'center' }}>
                         <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: riscoLesao ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', color: riscoLesao ? '#ef4444' : '#10b981', border: `1px solid ${riscoLesao ? '#ef4444' : '#10b981'}` }}>
-                          {riscoLesao ? '⚠️️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
+                          {riscoLesao ? '⚠️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
                         </span>
                       </td>
                     </tr>
@@ -636,13 +537,13 @@ export default function App() {
         </div>
       )}
 
-      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL (COM FILTROS DE ORDENAÇÃO) */}
+      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL (MODO CALENDÁRIO MENSAL VISUAL) */}
       {view === 'calendario' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', margin: 0, ...text3DStyle }}>📅 Calendário Operacional & Gestão de Sessões</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por data, tipo ou carga TSS.</p>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', margin: 0, ...text3DStyle }}>📅 Calendário Operacional (Modo Mensal)</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Visualização em grelha mensal de treinos, descanso (TSS=0) e jogos.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -680,43 +581,73 @@ export default function App() {
             </form>
           </div>
 
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', padding: '24px 32px 0 32px', margin: 0 }}>Agenda de Sessões e Jogos</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', marginTop: '16px' }}>
-              <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th onClick={() => ordenarDados('data', 'calendario')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaCal === 'data' ? '#38bdf8' : '#94a3b8' }}>Data {ordenarColunaCal === 'data' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('tipo', 'calendario')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaCal === 'tipo' ? '#38bdf8' : '#94a3b8' }}>Tipo de Sessão {ordenarColunaCal === 'tipo' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('tss', 'calendario')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaCal === 'tss' ? '#38bdf8' : '#94a3b8' }}>Carga TSS {ordenarColunaCal === 'tss' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th style={{ padding: '18px 24px' }}>Foco Operacional</th>
-                </tr>
-              </thead>
-              <tbody>
-                {calendarioOrdenado.map((sessao) => (
-                  <tr key={sessao.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '18px 24px', color: '#38bdf8', fontWeight: 'bold' }}>{sessao.data}</td>
-                    <td style={{ padding: '18px 24px', fontWeight: 'bold', color: sessao.tipo.includes('Jogo Oficial') ? '#22c55e' : (sessao.tipo.includes('Descanso') ? '#64748b' : '#f59e0b') }}>
-                      {sessao.tipo}
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', fontWeight: 'bold', color: sessao.tss === 0 ? '#94a3b8' : '#fff' }}>
-                      {sessao.tss} TSS {sessao.tss === 0 && '(Descanso)'}
-                    </td>
-                    <td style={{ padding: '18px 24px', color: '#cbd5e1' }}>{sessao.desc}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* GRELHA DO CALENDÁRIO MENSAL */}
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: 0 }}>Outubro 2026</h3>
+              <input type="month" value={mesCalendario} onChange={(e) => setMesCalendario(e.target.value)} style={{ padding: '8px 12px', backgroundColor: 'rgba(15,23,42,0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', textAlign: 'center', marginBottom: '10px' }}>
+              {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(d => (
+                <div key={d} style={{ fontWeight: 'bold', color: '#38bdf8', fontSize: '12px', padding: '8px' }}>{d}</div>
+              ))}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}>
+              {Array.from({ length: 31 }).map((_, index) => {
+                const diaNum = index + 1;
+                const diaStr = `2026-10-${diaNum < 10 ? '0' + diaNum : diaNum}`;
+                const sessaoDia = calendarioSessoes.find(s => s.data === diaStr);
+
+                let bgDia = 'rgba(15, 23, 42, 0.6)';
+                let corBordo = 'rgba(255,255,255,0.08)';
+                let tipoSessao = '';
+
+                if (sessaoDia) {
+                  if (sessaoDia.tipo.includes('Oficial')) {
+                    bgDia = 'rgba(34, 197, 94, 0.2)';
+                    corBordo = '#22c55e';
+                    tipoSessao = '🏆 Jogo Oficial';
+                  } else if (sessaoDia.tipo.includes('Descanso')) {
+                    bgDia = 'rgba(100, 116, 139, 0.2)';
+                    corBordo = '#64748b';
+                    tipoSessao = '💤 Descanso (TSS=0)';
+                  } else if (sessaoDia.tipo.includes('Amigável')) {
+                    bgDia = 'rgba(59, 130, 246, 0.2)';
+                    corBordo = '#3b82f6';
+                    tipoSessao = '🤝 Amigável';
+                  } else {
+                    bgDia = 'rgba(245, 158, 11, 0.2)';
+                    corBordo = '#f59e0b';
+                    tipoSessao = '⚡ ' + sessaoDia.tipo;
+                  }
+                }
+
+                return (
+                  <div key={index} style={{ backgroundColor: bgDia, border: `1px solid ${corBordo}`, borderRadius: '14px', padding: '12px 8px', minHeight: '90px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '13px', color: sessaoDia ? '#fff' : '#64748b' }}>{diaNum}</div>
+                    {sessaoDia && (
+                      <div>
+                        <div style={{ fontSize: '10px', fontWeight: 'bold', color: corBordo, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tipoSessao}</div>
+                        <div style={{ fontSize: '9px', color: '#94a3b8' }}>TSS: {sessaoDia.tss}</div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
 
-      {/* 4. GESTÃO DE PLANTEL */}
+      {/* 4. GESTÃO DE PLANTEL (COM FILTROS DE ORDENAÇÃO) */}
       {view === 'plantel' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>👥 Plantel Oficial (22 Atletas)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos para ordenar por atleta, posição, peso, altura ou estado.</p>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por qualquer coluna.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -867,17 +798,43 @@ export default function App() {
         </div>
       )}
 
-      {/* CLINICO */}
+      {/* CLINICO (COM FILTROS DE ORDENAÇÃO) */}
       {view === 'clinico' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444', margin: 0, ...text3DStyle }}>🏥 Departamento Clínico & Gestão de Lesões</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos para ordenar por atleta ou estado clínico.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
             </button>
           </header>
+
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th onClick={() => ordenarDados('nome', 'clinico')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaClinico === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta {ordenarColunaClinico === 'nome' ? (direcaoOrdemClinico === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('estado', 'clinico')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaClinico === 'estado' ? '#38bdf8' : '#94a3b8' }}>Estado Clínico {ordenarColunaClinico === 'estado' ? (direcaoOrdemClinico === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Tipo de Lesão</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Previsão de Regresso</th>
+                </tr>
+              </thead>
+              <tbody>
+                {plantelOrdenadoClinico.map((atleta) => (
+                  <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444' }}>{atleta.estado}</span>
+                    </td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.lesao === 'Nenhuma' ? '#94a3b8' : '#fca5a5', fontWeight: 'bold' }}>{atleta.lesao}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.previsao}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -895,7 +852,7 @@ export default function App() {
         </div>
       )}
 
-      {/* FICHA INDIVIDUAL */}
+      {/* FICHA INDIVIDUAL COMPLETA (AGREGA TODA A INFORMAÇÃO DO ATLETA) */}
       {view === 'ficha' && atletaSelecionado && (() => {
         const fcMaxTanaka = calcularTanakaFCMax(atletaSelecionado.idade);
         const zonasKarvonen = calcularZonasKarvonen(fcMaxTanaka, atletaSelecionado.fcRep);
@@ -909,7 +866,7 @@ export default function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
                 <img src={config.logoUrl} alt="Logo" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%', border: '2px solid #eab308', boxShadow: '0 4px 10px rgba(0,0,0,0.6)' }} />
                 <div>
-                  <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff', margin: 0, ...text3DStyle }}>Ficha Individual: {atletaSelecionado.nome} ({atletaSelecionado.posicao})</h2>
+                  <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff', margin: 0, ...text3DStyle }}>Ficha Individual Completa: {atletaSelecionado.nome} ({atletaSelecionado.posicao})</h2>
                   <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Nasc: {atletaSelecionado.nasc} ({atletaSelecionado.idade} anos) | PHV Offset: {atletaSelecionado.phvOffset}</p>
                 </div>
               </div>
@@ -922,6 +879,121 @@ export default function App() {
                 </button>
               </div>
             </header>
+
+            {/* Bloco 1: Biometria e Antropometria */}
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📏 Biometria & Antropometria</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Altura Total</span>
+                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', margin: '6px 0 0 0' }}>{atletaSelecionado.altura} m</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Peso Base vs Atual</span>
+                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#10b981', margin: '6px 0 0 0' }}>{atletaSelecionado.pesoBase} kg → {atletaSelecionado.peso} kg</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Variação Ponderal</span>
+                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: variacaoPeso > 0 ? '#f59e0b' : '#38bdf8', margin: '6px 0 0 0' }}>{variacaoPeso > 0 ? `+${variacaoPeso}` : variacaoPeso} kg</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco 2: Controlo Neuromuscular (CMJ) */}
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e', marginBottom: '16px' }}>⚡ Controlo Neuromuscular (CMJ)</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', alignItems: 'center' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Salto Base vs Atual</span>
+                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', margin: '6px 0 0 0' }}>{atletaSelecionado.cmjBase} cm → {atletaSelecionado.cmj} cm</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Variação Percentual</span>
+                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: variacaoCMJ >= 0 ? '#10b981' : '#ef4444', margin: '6px 0 0 0' }}>{variacaoCMJ >= 0 ? `+${variacaoCMJ}%` : `${variacaoCMJ}%`}</p>
+                </div>
+                <div style={{ backgroundColor: semafaroCMJ.bg, padding: '16px', borderRadius: '12px', border: `1px solid ${semafaroCMJ.cor}` }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Semáforo de Fadiga</span>
+                  <p style={{ fontSize: '15px', fontWeight: 'bold', color: semafaroCMJ.cor, margin: '6px 0 0 0' }}>{semafaroCMJ.texto}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco 3: Zonas Cardíacas e Fisiologia */}
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '16px' }}>❤️ Fisiologia & Zonas de Treino (Tanaka & Karvonen)</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Pressão Arterial</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: '4px 0 0 0' }}>{atletaSelecionado.pa} mmHg</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>FC Repouso</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#38bdf8', margin: '4px 0 0 0' }}>{atletaSelecionado.fcRep} bpm</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>FC Máxima (Tanaka)</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ef4444', margin: '4px 0 0 0' }}>{fcMaxTanaka} bpm</p>
+                </div>
+              </div>
+              <div style={{ backgroundColor: 'rgba(15,23,42,0.7)', padding: '14px', borderRadius: '12px' }}>
+                <span style={{ color: '#38bdf8', fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Zonas Karvonen:</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', fontSize: '11px', textAlign: 'center' }}>
+                  <div style={{ backgroundColor: 'rgba(16,185,129,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#10b981' }}>Z1:</strong> {zonasKarvonen.z1}</div>
+                  <div style={{ backgroundColor: 'rgba(56,189,248,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#38bdf8' }}>Z2:</strong> {zonasKarvonen.z2}</div>
+                  <div style={{ backgroundColor: 'rgba(245,158,11,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#f59e0b' }}>Z3:</strong> {zonasKarvonen.z3}</div>
+                  <div style={{ backgroundColor: 'rgba(239,68,68,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#ef4444' }}>Z4:</strong> {zonasKarvonen.z4}</div>
+                  <div style={{ backgroundColor: 'rgba(168,85,247,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#a855f7' }}>Z5:</strong> {zonasKarvonen.z5}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco 4: Estado Clínico, Nutrição, Notas e Estatísticas do Excel */}
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#ef4444', marginBottom: '16px' }}>🏥 Estatísticas, Clínica & Notas Técnicas</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Estado Clínico & Lesão</span>
+                  <p style={{ fontSize: '15px', fontWeight: 'bold', color: atletaSelecionado.estado === 'Apto' ? '#10b981' : '#ef4444', margin: '6px 0 0 0' }}>{atletaSelecionado.estado} — {atletaSelecionado.lesao} (Regresso: {atletaSelecionado.previsao})</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Nutrição & Suplementação</span>
+                  <p style={{ fontSize: '14px', color: '#38bdf8', margin: '6px 0 0 0' }}>{atletaSelecionado.nutricao}</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Treinos</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: '4px 0 0 0' }}>{atletaSelecionado.treinos}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Minutos Treino</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#60a5fa', margin: '4px 0 0 0' }}>{atletaSelecionado.minTreino}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Jogos</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: '4px 0 0 0' }}>{atletaSelecionado.jogos}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Minutos Jogo</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: '4px 0 0 0' }}>{atletaSelecionado.minJogo}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Golos</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: '4px 0 0 0' }}>{atletaSelecionado.golos}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '11px' }}>Assistências</span>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#60a5fa', margin: '4px 0 0 0' }}>{atletaSelecionado.assistencias}</p>
+                </div>
+              </div>
+
+              <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>Notas Confidenciais / Acompanhamento Técnico</span>
+                <p style={{ fontSize: '14px', color: '#fff', margin: '6px 0 0 0', fontStyle: 'italic' }}>"{atletaSelecionado.notas}"</p>
+              </div>
+            </div>
+
           </div>
         );
       })()}

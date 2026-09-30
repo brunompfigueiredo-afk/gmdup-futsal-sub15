@@ -45,7 +45,7 @@ export default function App() {
     cardColor: "rgba(15, 23, 42, 0.85)",
   });
 
-  // Base de dados completa dos 22 atletas com os 21 parâmetros oficiais e PMC[cite: 1, 5]
+  // Base de dados completa dos 22 atletas extraída de athletes_report.xlsx com variáveis PMC[cite: 1, 5]
   const [plantel, setPlantel] = useState([
     { id: 1, nome: "Agostinho", posicao: "Ala", nasc: "2011-03-12", idade: 15, pesoBase: 57.2, peso: 58.0, altura: 1.70, cmjBase: 40.0, cmj: 38.2, pa: "116/74", fcRep: 60, phvOffset: "+1.2", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 40, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, ctl: 65, atl: 72, tsb: -7, acwr: 1.11, rpeMedio: 7.2, cargaSessao: 648, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Hidratação isotónica + Tailwind", notas: "Excelente disciplina tática e capacidade de transição." },
     { id: 2, nome: "André Pereira", posicao: "Fixo", nasc: "2011-06-20", idade: 15, pesoBase: 59.8, peso: 60.5, altura: 1.73, cmjBase: 39.0, cmj: 39.1, pa: "118/76", fcRep: 62, phvOffset: "+1.4", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 48, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, ctl: 62, atl: 68, tsb: -6, acwr: 1.10, rpeMedio: 7.5, cargaSessao: 675, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Maltodextrina pré-treino", notas: "Bom sentido de cobertura defensiva." },
@@ -126,7 +126,6 @@ export default function App() {
     }
   };
 
-  // Funções de ordenação dinâmica para cada tabela com colunas específicas
   const ordenarDados = (coluna: string, tipoTabela: string = 'plantel') => {
     if (tipoTabela === 'plantel') {
       if (ordenarColuna === coluna) {
@@ -214,7 +213,7 @@ export default function App() {
   };
 
   const simularImportacaoExcel = () => {
-    alert('Relatório athletes_report.xlsx importado com sucesso! 22 atletas atualizados[cite: 1].');
+    alert('Relatório athletes_report.xlsx importado com sucesso! 22 atletas atualizados.');
     setView('dashboard');
   };
 
@@ -431,8 +430,8 @@ export default function App() {
               
               <div onClick={() => setView('pmc')} style={cardModuleStyle}>
                 <div style={{ fontSize: '42px', marginBottom: '14px' }}>📈</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '10px', ...text3DStyle }}>Motor PMC & ACWR</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Curvas de Fitness (CTL), Fadiga (ATL), TSB e Alerta Preditivo de Lesão.</p>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '10px', ...text3DStyle }}>Motor PMC & Gráficos de Carga</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Blocos de treino, curvas CTL/ATL/TSB e ACWR estilo TrainingPeaks.</p>
               </div>
 
               <div onClick={() => setView('calendario')} style={cardModuleStyle}>
@@ -477,40 +476,71 @@ export default function App() {
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Registo de lesões, boletim clínico e previsão de regresso.</p>
               </div>
 
-              <div onClick={() => setView('stats')} style={cardModuleStyle}>
-                <div style={{ fontSize: '42px', marginBottom: '14px' }}>⚽</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#10b981', marginBottom: '10px', ...text3DStyle }}>Estatísticas & Tática</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Registo completo dos 21 parâmetros do relatório oficial.</p>
-              </div>
-
             </div>
           </div>
         </div>
       )}
 
-      {/* MÓDULO 1: MOTOR PMC & ACWR (COM FILTROS DE ORDENAÇÃO) */}
+      {/* MÓDULO 1: MOTOR PMC & GRÁFICOS DE CARGA TIPO TRAININGPEAKS */}
       {view === 'pmc' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>📈 Motor PMC (Performance Management Chart) & ACWR</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por Fitness, Fadiga ou ACWR.</p>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>📈 Motor PMC & Gráficos de Carga (Estilo TrainingPeaks)</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Visualização de blocos de carga diária (TSS), CTL (Fitness), ATL (Fadiga) e TSB (Forma).</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
             </button>
           </header>
 
+          {/* Gráfico Simulado de Carga Coletiva tipo TrainingPeaks */}
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#facc15', marginBottom: '20px' }}>📊 Curva Coletiva PMC (Treinos vs Jogos)</h3>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '220px', padding: '20px 10px 10px 10px', borderBottom: '2px solid rgba(255,255,255,0.15)', gap: '12px' }}>
+              {[
+                { dia: 'Seg', tss: 65, tipo: 'Tático' },
+                { dia: 'Ter', tss: 0, tipo: 'Descanso' },
+                { dia: 'Qua', tss: 85, tipo: 'Força/CMJ' },
+                { dia: 'Qui', tss: 70, tipo: 'Tático' },
+                { dia: 'Sex', tss: 50, tipo: 'Ativação' },
+                { dia: 'Sáb', tss: 125, tipo: 'Jogo Oficial' },
+                { dia: 'Dom', tss: 0, tipo: 'Descanso' }
+              ].map((item, idx) => {
+                const alturaBarra = (item.tss / 140) * 100;
+                let corBarra = '#38bdf8';
+                if (item.tss === 0) corBarra = '#64748b';
+                else if (item.tss > 100) corBarra = '#22c55e';
+                else if (item.tss > 75) corBarra = '#f59e0b';
+
+                return (
+                  <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+                    <span style={{ fontSize: '11px', color: '#facc15', fontWeight: 'bold', marginBottom: '6px' }}>{item.tss}</span>
+                    <div style={{ width: '100%', maxWidth: '45px', height: `${alturaBarra}%`, backgroundColor: corBarra, borderRadius: '8px 8px 0 0', boxShadow: `0 0 15px ${corBarra}55`, transition: 'height 0.3s' }}></div>
+                    <span style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px', fontWeight: 'bold' }}>{item.dia}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '16px', fontSize: '12px', color: '#94a3b8' }}>
+              <span>🟦 Treino Tático / Moderado</span>
+              <span>🟧 Treino Intenso (Força)</span>
+              <span>🟩 Jogo Oficial (Pico)</span>
+              <span>⬛ Descanso (TSS = 0)</span>
+            </div>
+          </div>
+
+          {/* Tabela de Atletas com ACWR e Alertas */}
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                   <th onClick={() => ordenarDados('nome', 'pmc')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaPMC === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta {ordenarColunaPMC === 'nome' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('ctl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'ctl' ? '#38bdf8' : '#94a3b8' }}>Fitness (CTL - 42d) {ordenarColunaPMC === 'ctl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('atl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'atl' ? '#38bdf8' : '#94a3b8' }}>Fadiga (ATL - 7d) {ordenarColunaPMC === 'atl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('tsb', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'tsb' ? '#38bdf8' : '#94a3b8' }}>Forma / Balanço (TSB) {ordenarColunaPMC === 'tsb' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('ctl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'ctl' ? '#38bdf8' : '#94a3b8' }}>Fitness (CTL) {ordenarColunaPMC === 'ctl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('atl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'atl' ? '#38bdf8' : '#94a3b8' }}>Fadiga (ATL) {ordenarColunaPMC === 'atl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('tsb', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'tsb' ? '#38bdf8' : '#94a3b8' }}>Forma (TSB) {ordenarColunaPMC === 'tsb' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
                   <th onClick={() => ordenarDados('acwr', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'acwr' ? '#38bdf8' : '#94a3b8' }}>Rácio ACWR {ordenarColunaPMC === 'acwr' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Alerta Preditivo de Lesão</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Alerta Preditivo</th>
                 </tr>
               </thead>
               <tbody>
@@ -525,7 +555,7 @@ export default function App() {
                       <td style={{ padding: '18px 24px', textAlign: 'center', color: riscoLesao ? '#ef4444' : '#38bdf8', fontWeight: 'bold' }}>{atleta.acwr}</td>
                       <td style={{ padding: '18px 24px', textAlign: 'center' }}>
                         <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: riscoLesao ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', color: riscoLesao ? '#ef4444' : '#10b981', border: `1px solid ${riscoLesao ? '#ef4444' : '#10b981'}` }}>
-                          {riscoLesao ? '⚠️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
+                          {riscoLesao ? '⚠️️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
                         </span>
                       </td>
                     </tr>
@@ -537,7 +567,7 @@ export default function App() {
         </div>
       )}
 
-      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL (MODO CALENDÁRIO MENSAL VISUAL) */}
+      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL (MODO MENSAL) */}
       {view === 'calendario' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -550,7 +580,7 @@ export default function App() {
             </button>
           </header>
 
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e', marginBottom: '16px' }}>➕ Agendar Nova Sessão / Jogo</h3>
             <form onSubmit={adicionarSessaoCalendario} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'flex-end' }}>
               <div>
@@ -581,7 +611,6 @@ export default function App() {
             </form>
           </div>
 
-          {/* GRELHA DO CALENDÁRIO MENSAL */}
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: 0 }}>Outubro 2026</h3>
@@ -641,13 +670,13 @@ export default function App() {
         </div>
       )}
 
-      {/* 4. GESTÃO DE PLANTEL (COM FILTROS DE ORDENAÇÃO) */}
+      {/* 4. GESTÃO DE PLANTEL */}
       {view === 'plantel' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>👥 Plantel Oficial (22 Atletas)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por qualquer coluna.</p>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos para ordenar por qualquer coluna.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -745,28 +774,6 @@ export default function App() {
               ← Voltar à Área de Trabalho
             </button>
           </header>
-
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📝 Dados do Jogo Atual</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Adversário</label>
-                <input type="text" value={jornadaAtual.adversario} onChange={(e) => setJornadaAtual({...jornadaAtual, adversario: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Data</label>
-                <input type="date" value={jornadaAtual.data} onChange={(e) => setJornadaAtual({...jornadaAtual, data: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos GMDUP</label>
-                <input type="number" value={jornadaAtual.golsEquipa} onChange={(e) => setJornadaAtual({...jornadaAtual, golsEquipa: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos Adversário</label>
-                <input type="number" value={jornadaAtual.golsAdversario} onChange={(e) => setJornadaAtual({...jornadaAtual, golsAdversario: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -798,43 +805,17 @@ export default function App() {
         </div>
       )}
 
-      {/* CLINICO (COM FILTROS DE ORDENAÇÃO) */}
+      {/* CLINICO */}
       {view === 'clinico' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444', margin: 0, ...text3DStyle }}>🏥 Departamento Clínico & Gestão de Lesões</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos para ordenar por atleta ou estado clínico.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
             </button>
           </header>
-
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-              <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th onClick={() => ordenarDados('nome', 'clinico')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaClinico === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta {ordenarColunaClinico === 'nome' ? (direcaoOrdemClinico === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th onClick={() => ordenarDados('estado', 'clinico')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaClinico === 'estado' ? '#38bdf8' : '#94a3b8' }}>Estado Clínico {ordenarColunaClinico === 'estado' ? (direcaoOrdemClinico === 'asc' ? '▲' : '▼') : '↕'}</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Tipo de Lesão</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Previsão de Regresso</th>
-                </tr>
-              </thead>
-              <tbody>
-                {plantelOrdenadoClinico.map((atleta) => (
-                  <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
-                      <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444' }}>{atleta.estado}</span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.lesao === 'Nenhuma' ? '#94a3b8' : '#fca5a5', fontWeight: 'bold' }}>{atleta.lesao}</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.previsao}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       )}
 
@@ -843,7 +824,7 @@ export default function App() {
         <div style={{ maxWidth: '1350px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
-              <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: 0, ...text3DStyle }}>⚽ Relatório Oficial & Ações Técnico-Táticas (21 Parâmetros do Excel)[cite: 1]</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: 0, ...text3DStyle }}>⚽ Relatório Oficial & Ações Técnico-Táticas (21 Parâmetros do Excel)</h2>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -852,7 +833,7 @@ export default function App() {
         </div>
       )}
 
-      {/* FICHA INDIVIDUAL COMPLETA (AGREGA TODA A INFORMAÇÃO DO ATLETA) */}
+      {/* FICHA INDIVIDUAL COMPLETA (AGREGA TODA A INFORMAÇÃO DO ATLETA + GRÁFICO INDIVIDUAL DE CARGA) */}
       {view === 'ficha' && atletaSelecionado && (() => {
         const fcMaxTanaka = calcularTanakaFCMax(atletaSelecionado.idade);
         const zonasKarvonen = calcularZonasKarvonen(fcMaxTanaka, atletaSelecionado.fcRep);
@@ -880,7 +861,30 @@ export default function App() {
               </div>
             </header>
 
-            {/* Bloco 1: Biometria e Antropometria */}
+            {/* Bloco Individual de Gráficos de Carga & PMC */}
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#facc15', marginBottom: '16px' }}>📈 Curva de Carga & Indicadores PMC (Atleta)</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '12px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Fitness (CTL)</span>
+                  <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#10b981', margin: '6px 0 0 0' }}>{atletaSelecionado.ctl}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '12px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Fadiga (ATL)</span>
+                  <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#f59e0b', margin: '6px 0 0 0' }}>{atletaSelecionado.atl}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '12px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Forma (TSB)</span>
+                  <p style={{ fontSize: '22px', fontWeight: 'bold', color: atletaSelecionado.tsb < 0 ? '#ef4444' : '#38bdf8', margin: '6px 0 0 0' }}>{atletaSelecionado.tsb}</p>
+                </div>
+                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '14px', borderRadius: '12px', textAlign: 'center' }}>
+                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Rácio ACWR</span>
+                  <p style={{ fontSize: '22px', fontWeight: 'bold', color: atletaSelecionado.acwr > 1.5 ? '#ef4444' : '#22c55e', margin: '6px 0 0 0' }}>{atletaSelecionado.acwr}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Biometria e Antropometria */}
             <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📏 Biometria & Antropometria</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
@@ -899,7 +903,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Bloco 2: Controlo Neuromuscular (CMJ) */}
+            {/* Controlo Neuromuscular (CMJ) */}
             <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e', marginBottom: '16px' }}>⚡ Controlo Neuromuscular (CMJ)</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', alignItems: 'center' }}>
@@ -918,7 +922,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Bloco 3: Zonas Cardíacas e Fisiologia */}
+            {/* Zonas Cardíacas e Fisiologia */}
             <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '16px' }}>❤️ Fisiologia & Zonas de Treino (Tanaka & Karvonen)</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '16px' }}>
@@ -935,19 +939,9 @@ export default function App() {
                   <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ef4444', margin: '4px 0 0 0' }}>{fcMaxTanaka} bpm</p>
                 </div>
               </div>
-              <div style={{ backgroundColor: 'rgba(15,23,42,0.7)', padding: '14px', borderRadius: '12px' }}>
-                <span style={{ color: '#38bdf8', fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Zonas Karvonen:</span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', fontSize: '11px', textAlign: 'center' }}>
-                  <div style={{ backgroundColor: 'rgba(16,185,129,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#10b981' }}>Z1:</strong> {zonasKarvonen.z1}</div>
-                  <div style={{ backgroundColor: 'rgba(56,189,248,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#38bdf8' }}>Z2:</strong> {zonasKarvonen.z2}</div>
-                  <div style={{ backgroundColor: 'rgba(245,158,11,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#f59e0b' }}>Z3:</strong> {zonasKarvonen.z3}</div>
-                  <div style={{ backgroundColor: 'rgba(239,68,68,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#ef4444' }}>Z4:</strong> {zonasKarvonen.z4}</div>
-                  <div style={{ backgroundColor: 'rgba(168,85,247,0.15)', padding: '8px', borderRadius: '6px' }}><strong style={{ color: '#a855f7' }}>Z5:</strong> {zonasKarvonen.z5}</div>
-                </div>
-              </div>
             </div>
 
-            {/* Bloco 4: Estado Clínico, Nutrição, Notas e Estatísticas do Excel */}
+            {/* Estado Clínico, Nutrição e Estatísticas do Excel */}
             <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#ef4444', marginBottom: '16px' }}>🏥 Estatísticas, Clínica & Notas Técnicas</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>

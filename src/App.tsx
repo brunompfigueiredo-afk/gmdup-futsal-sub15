@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'login' | 'dashboard' | 'plantel' | 'stats' | 'analytics' | 'fisiologia' | 'ficha' | 'convocatoria' | 'treino' | 'clinico' | 'antropometria' | 'jogo' | 'pmc' | 'calendario' | 'importar' | 'exportar' | 'admin'>('landing');
+  const [view, setView] = useState<'landing' | 'login' | 'dashboard' | 'plantel' | 'stats' | 'analytics' | 'fisiologia' | 'ficha' | 'convocatoria' | 'treino' | 'clinico' | 'antropometria' | 'jogo' | 'pmc' | 'calendario' | 'update' | 'admin'>('landing');
   
   const [emailInput, setEmailInput] = useState('');
   const [passInput, setPassInput] = useState('');
@@ -39,7 +39,7 @@ export default function App() {
     cardColor: "rgba(15, 23, 42, 0.85)",
   });
 
-  // Base de dados completa dos 22 atletas extraída de athletes_report.xlsx com variáveis PMC integradas[cite: 1]
+  // Base de dados completa dos 22 atletas com os 21 parâmetros oficiais e PMC[cite: 1, 5]
   const [plantel, setPlantel] = useState([
     { id: 1, nome: "Agostinho", posicao: "Ala", nasc: "2011-03-12", idade: 15, pesoBase: 57.2, peso: 58.0, altura: 1.70, cmjBase: 40.0, cmj: 38.2, pa: "116/74", fcRep: 60, phvOffset: "+1.2", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 40, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, ctl: 65, atl: 72, tsb: -7, acwr: 1.11, rpeMedio: 7.2, cargaSessao: 648, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Hidratação isotónica + Tailwind", notas: "Excelente disciplina tática e capacidade de transição." },
     { id: 2, nome: "André Pereira", posicao: "Fixo", nasc: "2011-06-20", idade: 15, pesoBase: 59.8, peso: 60.5, altura: 1.73, cmjBase: 39.0, cmj: 39.1, pa: "118/76", fcRep: 62, phvOffset: "+1.4", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 48, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, ctl: 62, atl: 68, tsb: -6, acwr: 1.10, rpeMedio: 7.5, cargaSessao: 675, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Maltodextrina pré-treino", notas: "Bom sentido de cobertura defensiva." },
@@ -175,8 +175,9 @@ export default function App() {
     alert('Sessão / Evento adicionado ao Calendário Operacional com sucesso!');
   };
 
-  const simularImportacaoExcel = () => {
-    alert('Relatório athletes_report.xlsx importado com sucesso! 22 atletas atualizados[cite: 1].');
+  const simularAtualizacaoDados = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert('Módulo Update executado com sucesso! Dados sincronizados com o relatório athletes_report.xlsx[cite: 1] e exportados.');
     setView('dashboard');
   };
 
@@ -220,7 +221,7 @@ export default function App() {
   const obterSemafaroCMJ = (variacao: number) => {
     if (variacao >= -5) return { texto: "Normal (Ótimo)", cor: "#10b981", bg: "rgba(16,185,129,0.2)" };
     if (variacao >= -10) return { texto: "Alerta de Fadiga (-5% a -10%)", cor: "#f59e0b", bg: "rgba(245,158,11,0.2)" };
-    return { texto: "Risco de Sobretreino (&gt; -10%)", cor: "#ef4444", bg: "rgba(239,68,68,0.2)" };
+    return { texto: "Risco de Sobretreino (> -10%)", cor: "#ef4444", bg: "rgba(239,68,68,0.2)" };
   };
 
   const text3DStyle = {
@@ -415,16 +416,10 @@ export default function App() {
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Registo detalhado por jornada, golos e ações disciplinares.</p>
               </div>
 
-              <div onClick={() => setView('importar')} style={cardModuleStyle}>
-                <div style={{ fontSize: '42px', marginBottom: '14px' }}>📂</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '10px', ...text3DStyle }}>Importar Excel</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Sincronização direta do relatório oficial athletes_report.xlsx.</p>
-              </div>
-
-              <div onClick={() => setView('exportar')} style={cardModuleStyle}>
-                <div style={{ fontSize: '42px', marginBottom: '14px' }}>📤</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px', ...text3DStyle }}>Exportar Dados</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Exportação de relatórios em Excel/CSV e impressão em PDF.</p>
+              <div onClick={() => setView('update')} style={cardModuleStyle}>
+                <div style={{ fontSize: '42px', marginBottom: '14px' }}>🔄</div>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '10px', ...text3DStyle }}>Módulo UPDATE (I/O)</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Importar Excel, exportar dados e sincronização global unificada.</p>
               </div>
 
               <div onClick={() => setView('antropometria')} style={cardModuleStyle}>
@@ -462,7 +457,7 @@ export default function App() {
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>📈 Motor PMC (Performance Management Chart) & ACWR</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Monitorização longitudinal de Fitness (CTL), Fadiga (ATL), TSB e Alerta de Risco de Lesão (&gt; 1.5).</p>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Monitorização longitudinal de Fitness (CTL), Fadiga (ATL), TSB e Alerta de Risco de Lesão (&gt; 1.5)[cite: 5].</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -493,7 +488,7 @@ export default function App() {
                       <td style={{ padding: '18px 24px', textAlign: 'center', color: riscoLesao ? '#ef4444' : '#38bdf8', fontWeight: 'bold' }}>{atleta.acwr}</td>
                       <td style={{ padding: '18px 24px', textAlign: 'center' }}>
                         <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: riscoLesao ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', color: riscoLesao ? '#ef4444' : '#10b981', border: `1px solid ${riscoLesao ? '#ef4444' : '#10b981'}` }}>
-                          {riscoLesao ? '⚠️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
+                          {riscoLesao ? '⚠️️ ALERTA: ACWR > 1.5' : 'Seguro / Ótimo'}
                         </span>
                       </td>
                     </tr>
@@ -579,6 +574,42 @@ export default function App() {
         </div>
       )}
 
+      {/* MÓDULO UNIFICADO: UPDATE (I/O) */}
+      {view === 'update' && (
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', margin: 0, ...text3DStyle }}>🔄 Módulo UPDATE (Import / Export)</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Sincronização de relatórios Excel e exportação de dados da equipa.</p>
+            </div>
+            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
+              ← Voltar à Área de Trabalho
+            </button>
+          </header>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📂</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '10px' }}>Importar Relatório Excel</h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>Atualiza o plantel com o ficheiro <code>athletes_report.xlsx</code>.</p>
+              <input type="file" accept=".xlsx, .xls" onChange={simularImportacaoExcel} style={{ display: 'none' }} id="file-update-upload" />
+              <label htmlFor="file-update-upload" style={{ ...btn3DStyle, display: 'inline-block', cursor: 'pointer', padding: '12px 24px', fontSize: '14px' }}>
+                Carregar Excel
+              </label>
+            </div>
+
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📤</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px' }}>Exportar Dados da Equipa</h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>Descarrega a folha completa de dados estatísticos em formato CSV/Excel.</p>
+              <button onClick={exportarExcelEquipa} style={btn3DStyle}>
+                Descarregar Excel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 4. GESTÃO DE PLANTEL */}
       {view === 'plantel' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -647,34 +678,28 @@ export default function App() {
               ← Voltar à Área de Trabalho
             </button>
           </header>
-        </div>
-      )}
 
-      {/* IMPORTAR */}
-      {view === 'importar' && (
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-            <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', margin: 0, ...text3DStyle }}>📂 Importador Direto de Relatório Excel</h2>
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📝 Dados do Jogo Atual</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Adversário</label>
+                <input type="text" value={jornadaAtual.adversario} onChange={(e) => setJornadaAtual({...jornadaAtual, adversario: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Data</label>
+                <input type="date" value={jornadaAtual.data} onChange={(e) => setJornadaAtual({...jornadaAtual, data: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos GMDUP</label>
+                <input type="number" value={jornadaAtual.golsEquipa} onChange={(e) => setJornadaAtual({...jornadaAtual, golsEquipa: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos Adversário</label>
+                <input type="number" value={jornadaAtual.golsAdversario} onChange={(e) => setJornadaAtual({...jornadaAtual, golsAdversario: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
             </div>
-            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
-              ← Voltar à Área de Trabalho
-            </button>
-          </header>
-        </div>
-      )}
-
-      {/* EXPORTAR */}
-      {view === 'exportar' && (
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-            <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', margin: 0, ...text3DStyle }}>📤 Exportar Dados & Relatórios</h2>
-            </div>
-            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
-              ← Voltar à Área de Trabalho
-            </button>
-          </header>
+          </div>
         </div>
       )}
 

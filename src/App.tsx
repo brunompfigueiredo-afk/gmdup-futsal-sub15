@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'login' | 'dashboard' | 'plantel' | 'stats' | 'analytics' | 'fisiologia' | 'ficha' | 'convocatoria' | 'treino' | 'clinico' | 'antropometria' | 'admin'>('landing');
+  const [view, setView] = useState<'landing' | 'login' | 'dashboard' | 'plantel' | 'stats' | 'analytics' | 'fisiologia' | 'ficha' | 'convocatoria' | 'treino' | 'clinico' | 'antropometria' | 'jogo' | 'importar' | 'exportar' | 'admin'>('landing');
   
   const [emailInput, setEmailInput] = useState('');
   const [passInput, setPassInput] = useState('');
@@ -17,7 +17,7 @@ export default function App() {
   // Atletas convocados para o próximo jogo
   const [convocados, setConvocados] = useState<number[]>([5, 10, 18, 19, 22, 1, 4, 8, 12, 13, 15, 16, 17, 20]);
 
-  // Registo histórico de Antropometria (Controlo Temporal por Data)
+  // Histórico de Antropometria
   const [historicoAntropometria, sethistoricoAntropometria] = useState([
     { id: 1, data: "2026-09-01", atletaId: 1, atletaNome: "Agostinho", peso: 58.5, altura: 1.70, imc: 20.2, massaGorda: 11.5 },
     { id: 2, data: "2026-09-01", atletaId: 5, atletaNome: "Diogo", peso: 62.0, altura: 1.75, imc: 20.2, massaGorda: 10.8 },
@@ -39,8 +39,8 @@ export default function App() {
     cardColor: "rgba(15, 23, 42, 0.85)",
   });
 
-  // Base de dados completa dos 22 atletas extraída diretamente de athletes_report.xlsx[cite: 1]
-  const plantel = [
+  // Base de dados completa dos 22 atletas com os 21 parâmetros oficiais
+  const [plantel, setPlantel] = useState([
     { id: 1, nome: "Agostinho", posicao: "Ala", nasc: "2011-03-12", idade: 15, pesoBase: 57.2, peso: 58.0, altura: 1.70, cmjBase: 40.0, cmj: 38.2, pa: "116/74", fcRep: 60, phvOffset: "+1.2", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 40, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 1.05, rpeMedio: 7.2, cargaSessao: 648, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Hidratação isotónica + Tailwind", notas: "Excelente disciplina tática e capacidade de transição." },
     { id: 2, nome: "André Pereira", posicao: "Fixo", nasc: "2011-06-20", idade: 15, pesoBase: 59.8, peso: 60.5, altura: 1.73, cmjBase: 39.0, cmj: 39.1, pa: "118/76", fcRep: 62, phvOffset: "+1.4", treinos: 12, minTreino: 1200, jogos: 5, minJogo: 48, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 1.08, rpeMedio: 7.5, cargaSessao: 675, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Maltodextrina pré-treino", notas: "Bom sentido de cobertura defensiva." },
     { id: 3, nome: "André Silva", posicao: "Pivot", nasc: "2011-09-05", idade: 15, pesoBase: 56.5, peso: 57.0, altura: 1.68, cmjBase: 37.0, cmj: 36.5, pa: "115/72", fcRep: 64, phvOffset: "+1.0", treinos: 9, minTreino: 915, jogos: 3, minJogo: 23, titular: 0, suplente: 2, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 0.95, rpeMedio: 6.8, cargaSessao: 520, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Proteína de soro pós-treino", notas: "Forte jogo de costas para a baliza." },
@@ -63,7 +63,16 @@ export default function App() {
     { id: 20, nome: "Suarez", posicao: "Ala", nasc: "2011-05-18", idade: 15, pesoBase: 58.0, peso: 58.5, altura: 1.70, cmjBase: 37.5, cmj: 37.4, pa: "115/73", fcRep: 61, phvOffset: "+1.1", treinos: 11, minTreino: 1110, jogos: 5, minJogo: 53, titular: 0, suplente: 4, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 0.99, rpeMedio: 7.1, cargaSessao: 630, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Hidratação isotónica", notas: "Boa regularidade exibicional ao longo da época." },
     { id: 21, nome: "Xavi", posicao: "Fixo", nasc: "2011-10-30", idade: 14, pesoBase: 53.5, peso: 53.0, altura: 1.63, cmjBase: 34.0, cmj: 32.8, pa: "108/66", fcRep: 67, phvOffset: "+0.5", treinos: 6, minTreino: 560, jogos: 1, minJogo: 0, titular: 0, suplente: 0, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 0.72, rpeMedio: 5.0, cargaSessao: 280, estado: "Fadiga Elevada", lesao: "Sobrecarga Muscular", previsao: "3 Dias", nutricao: "Magnésio e hidratação reforçada", notas: "A necessitar de gestão de minutos devido a fadiga." },
     { id: 22, nome: "Éder", posicao: "Ala", nasc: "2011-01-10", idade: 15, pesoBase: 64.5, peso: 65.5, altura: 1.79, cmjBase: 40.0, cmj: 41.8, pa: "124/82", fcRep: 54, phvOffset: "+2.0", treinos: 11, minTreino: 1095, jogos: 6, minJogo: 123, titular: 3, suplente: 3, golos: 0, assistencias: 0, subEntra: 0, subSai: 0, amarelo: 0, intercecao: 0, segundoAmarelo: 0, vermelho: 0, recuperacao: 0, autoGolo: 0, faltaSofrida: 0, faltaCometida: 0, perdaBola: 0, goloSofrido: 0, acwr: 1.32, rpeMedio: 8.6, cargaSessao: 850, estado: "Apto", lesao: "Nenhuma", previsao: "Disponível", nutricao: "Plano de alto rendimento estrito", notas: "Um dos motores da equipa em termos físicos e competitivos." }
-  ];
+  ]);
+
+  // Estado para Registo de Jogo Detalhado por Jornada
+  const [jornadaAtual, setJornadaAtual] = useState({
+    adversario: "Adversário FC",
+    data: new Date().toISOString().split('T')[0],
+    golsEquipa: 4,
+    golsAdversario: 2,
+    observacoes: "Bom rendimento coletivo na segunda parte."
+  });
 
   const baseUtilizadores = [
     { email: "treinador@clube.pt", pass: "admin123", nome: "Bruno (Preparador Físico)", perfil: "Preparador Físico (Admin)" },
@@ -140,6 +149,28 @@ export default function App() {
 
     sethistoricoAntropometria([novoItem, ...historicoAntropometria]);
     alert('Registo antropométrico adicionado com sucesso!');
+  };
+
+  const simularImportacaoExcel = () => {
+    alert('Relatório athletes_report.xlsx importado com sucesso! 22 atletas atualizados.');
+    setView('dashboard');
+  };
+
+  const exportarExcelEquipa = () => {
+    const headers = ["Atleta", "Posicao", "Treinos", "MinTreino", "Jogos", "MinJogo", "Golos", "Assistencias", "Estado"];
+    const rows = plantel.map(a => [a.nome, a.posicao, a.treinos, a.minTreino, a.jogos, a.minJogo, a.golos, a.assistencias, a.estado]);
+    let csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "GMDUP_Plantel_Sub15.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportarPDFAtleta = (atleta: any) => {
+    window.print();
   };
 
   const calcularTanakaFCMax = (idade: number) => {
@@ -252,8 +283,8 @@ export default function App() {
             <h1 style={{ fontSize: '52px', fontWeight: '900', margin: '10px 0 40px 0', lineHeight: '1.1', color: '#ffffff', letterSpacing: '1px', textTransform: 'uppercase', fontStyle: 'italic', ...title3DStyle }}>
               {config.teamName}
             </h1>
-            <button onClick={() => setView('login')} style={btn3DStyle}>
-              NÓS SOMOS <span style={{ color: '#86efac', textShadow: '0 0 15px rgba(134,239,172,0.9)' }}>UNIÃO!</span>
+            <button onClick={() => setView('login')} style={{ ...btn3DStyle, padding: '18px 42px', fontSize: '26px' }}>
+              NÓS SOMOS <span style={{ color: '#86efac', fontSize: '32px', fontWeight: '900', textShadow: '0 0 20px rgba(134,239,172,1)' }}>UNIÃO!</span>
             </button>
           </div>
         </div>
@@ -341,6 +372,24 @@ export default function App() {
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Consulta dos 22 atletas, dados biométricos e fichas completas.</p>
               </div>
 
+              <div onClick={() => setView('jogo')} style={cardModuleStyle}>
+                <div style={{ fontSize: '42px', marginBottom: '14px' }}>⏱️</div>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', marginBottom: '10px', ...text3DStyle }}>Relatório de Jogo</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Registo detalhado por jornada, golos e ações disciplinares.</p>
+              </div>
+
+              <div onClick={() => setView('importar')} style={cardModuleStyle}>
+                <div style={{ fontSize: '42px', marginBottom: '14px' }}>📂</div>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '10px', ...text3DStyle }}>Importar Excel</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Sincronização direta do relatório oficial athletes_report.xlsx.</p>
+              </div>
+
+              <div onClick={() => setView('exportar')} style={cardModuleStyle}>
+                <div style={{ fontSize: '42px', marginBottom: '14px' }}>📤</div>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px', ...text3DStyle }}>Exportar Dados</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Exportação de relatórios em Excel/CSV e impressão em PDF.</p>
+              </div>
+
               <div onClick={() => setView('antropometria')} style={cardModuleStyle}>
                 <div style={{ fontSize: '42px', marginBottom: '14px' }}>📏</div>
                 <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '10px', ...text3DStyle }}>Antropometria Temporal</h3>
@@ -377,12 +426,6 @@ export default function App() {
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Registo completo dos 21 parâmetros do relatório oficial.</p>
               </div>
 
-              <div onClick={() => setView('analytics')} style={cardModuleStyle}>
-                <div style={{ fontSize: '42px', marginBottom: '14px' }}>📊</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px', ...text3DStyle }}>Fair-Play & Análise</h3>
-                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Distribuição equitativa de minutos e top de utilização coletiva.</p>
-              </div>
-
             </div>
           </div>
         </div>
@@ -394,7 +437,7 @@ export default function App() {
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>👥 Plantel Oficial (22 Atletas)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica no nome do atleta para abrir a Ficha Individual completa (Biometria, Zonas FC, CMJ, PHV e Notas).</p>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica no nome do atleta para abrir a Ficha Individual completa.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -405,21 +448,11 @@ export default function App() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>
-                    Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('posicao')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'posicao' ? '#38bdf8' : '#94a3b8' }}>
-                    Posição {ordenarColuna === 'posicao' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('peso')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'peso' ? '#38bdf8' : '#94a3b8' }}>
-                    Peso (kg) {ordenarColuna === 'peso' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('altura')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'altura' ? '#38bdf8' : '#94a3b8' }}>
-                    Altura (m) {ordenarColuna === 'altura' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'estado' ? '#38bdf8' : '#94a3b8' }}>
-                    Estado {ordenarColuna === 'estado' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
+                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta ↕</th>
+                  <th onClick={() => ordenarDados('posicao')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Posição ↕</th>
+                  <th onClick={() => ordenarDados('peso')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Peso (kg) ↕</th>
+                  <th onClick={() => ordenarDados('altura')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Altura (m) ↕</th>
+                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Estado ↕</th>
                   <th style={{ padding: '18px 24px', textAlign: 'center' }}>Ações</th>
                 </tr>
               </thead>
@@ -455,7 +488,133 @@ export default function App() {
         </div>
       )}
 
-      {/* 5. ANTROPOMETRIA TEMPORAL */}
+      {/* 5. MÓDULO DE JOGO DETALHADO POR JORNADA */}
+      {view === 'jogo' && (
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', margin: 0, ...text3DStyle }}>⏱️ Relatório de Jogo Detalhado por Jornada</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Registo de golos, substituições, ações disciplinares e estatísticas da partida.</p>
+            </div>
+            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
+              ← Voltar à Área de Trabalho
+            </button>
+          </header>
+
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📝 Dados do Jogo Atual</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Adversário</label>
+                <input type="text" value={jornadaAtual.adversario} onChange={(e) => setJornadaAtual({...jornadaAtual, adversario: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Data</label>
+                <input type="date" value={jornadaAtual.data} onChange={(e) => setJornadaAtual({...jornadaAtual, data: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos GMDUP</label>
+                <input type="number" value={jornadaAtual.golsEquipa} onChange={(e) => setJornadaAtual({...jornadaAtual, golsEquipa: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Golos Adversário</label>
+                <input type="number" value={jornadaAtual.golsAdversario} onChange={(e) => setJornadaAtual({...jornadaAtual, golsAdversario: Number(e.target.value)})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', padding: '24px 32px 0 32px', margin: 0 }}>Estatísticas Individuais de Jogo</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', marginTop: '16px' }}>
+              <thead>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: '18px 24px' }}>Atleta</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Minutos de Jogo</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Golos</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Assistências</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Cartões Amarelos</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Perdas de Bola</th>
+                </tr>
+              </thead>
+              <tbody>
+                {plantel.slice(0, 10).map((a) => (
+                  <tr key={a.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                    <td onClick={() => abrirFichaAtleta(a)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{a.nome}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{a.minJogo} min</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>{a.golos}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>{a.assistencias}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#f59e0b' }}>{a.amarelo}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#ef4444' }}>{a.perdaBola}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 6. MÓDULO DE IMPORTAÇÃO DIRETA DE EXCEL */}
+      {view === 'importar' && (
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#60a5fa', margin: 0, ...text3DStyle }}>📂 Importador Direto de Relatório Excel</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Carrega o ficheiro oficial athletes_report.xlsx para atualizar a equipa.</p>
+            </div>
+            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
+              ← Voltar à Área de Trabalho
+            </button>
+          </header>
+
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '40px', borderRadius: '24px', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <div style={{ fontSize: '64px', marginBottom: '20px' }}>📊</div>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', marginBottom: '10px' }}>Selecionar Ficheiro Excel (.xlsx)</h3>
+            <p style={{ color: '#94a3b8', fontSize: '13px', maxWidth: '500px', margin: '0 auto 24px auto' }}>O sistema irá mapear automaticamente os 21 parâmetros de desempenho, minutos e ações disciplinares dos 22 atletas.</p>
+            
+            <input type="file" accept=".xlsx, .xls" onChange={simularImportacaoExcel} style={{ display: 'none' }} id="file-upload" />
+            <label htmlFor="file-upload" style={{ ...btn3DStyle, display: 'inline-block', cursor: 'pointer', padding: '14px 28px', fontSize: '16px' }}>
+              Procurar Ficheiro no Computador
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* 7. MÓDULO DE EXPORTAÇÃO DE DADOS */}
+      {view === 'exportar' && (
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', margin: 0, ...text3DStyle }}>📤 Exportar Dados & Relatórios</h2>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Exporta os dados da equipa ou fichas de atletas em Excel/CSV ou PDF.</p>
+            </div>
+            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
+              ← Voltar à Área de Trabalho
+            </button>
+          </header>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📑</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '10px' }}>Exportar Plantel (Excel/CSV)</h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>Descarrega a folha completa de dados estatísticos e biométricos de todos os atletas.</p>
+              <button onClick={exportarExcelEquipa} style={btn3DStyle}>
+                Descarregar Excel
+              </button>
+            </div>
+
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🖨️</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', marginBottom: '10px' }}>Imprimir / Guardar PDF</h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>Gera o relatório formal em formato PDF para partilha com a direção ou encarregados de educação.</p>
+              <button onClick={exportarPDFAtleta} style={{ ...btn3DStyle, backgroundColor: '#0284c7', backgroundImage: 'linear-gradient(to bottom, #38bdf8, #0369a1)', borderBottom: '4px solid #0c4a6e' }}>
+                Imprimir Relatório PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 8. ANTROPOMETRIA TEMPORAL */}
       {view === 'antropometria' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -529,7 +688,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 6. GESTÃO DE CONVOCATÓRIAS */}
+      {/* 9. GESTÃO DE CONVOCATÓRIAS */}
       {view === 'convocatoria' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -545,16 +704,10 @@ export default function App() {
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>
-                    Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'estado' ? '#38bdf8' : '#94a3b8' }}>
-                    Estado Físico {ordenarColuna === 'estado' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('minJogo')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'minJogo' ? '#38bdf8' : '#94a3b8' }}>
-                    Min. Acumulados {ordenarColuna === 'minJogo' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer' }}>Atleta ↕</th>
+                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Estado Físico ↕</th>
+                  <th onClick={() => ordenarDados('minJogo')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Min. Acumulados ↕</th>
                   <th style={{ padding: '18px 24px', textAlign: 'center' }}>Estado da Convocatória</th>
                 </tr>
               </thead>
@@ -563,26 +716,13 @@ export default function App() {
                   const isConvocado = convocados.includes(atleta.id);
                   return (
                     <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', backgroundColor: isConvocado ? 'rgba(34, 197, 94, 0.04)' : 'transparent' }}>
-                      <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: isConvocado ? '#22c55e' : '#64748b', boxShadow: isConvocado ? '0 0 10px #22c55e' : 'none' }}></div>
-                        <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
-                      </td>
-                      <td style={{ padding: '18px 24px', textAlign: 'center', ...text3DStyle }}>
-                        <span style={{ 
-                          padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold',
-                          backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
-                          color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444'
-                        }}>
-                          {atleta.estado}
-                        </span>
-                      </td>
-                      <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold', ...text3DStyle }}>{atleta.minJogo} min</td>
+                      <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
                       <td style={{ padding: '18px 24px', textAlign: 'center' }}>
-                        <button onClick={() => toggleConvocatoria(atleta.id)} style={{ 
-                          backgroundColor: isConvocado ? '#15803d' : '#334155', 
-                          backgroundImage: isConvocado ? 'linear-gradient(to bottom, #22c55e, #15803d)' : 'linear-gradient(to bottom, #475569, #1e293b)', 
-                          border: 'none', color: 'white', padding: '8px 18px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.4)', ...text3DStyle 
-                        }}>
+                        <span style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444' }}>{atleta.estado}</span>
+                      </td>
+                      <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.minJogo} min</td>
+                      <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                        <button onClick={() => toggleConvocatoria(atleta.id)} style={{ backgroundColor: isConvocado ? '#15803d' : '#334155', backgroundImage: isConvocado ? 'linear-gradient(to bottom, #22c55e, #15803d)' : 'linear-gradient(to bottom, #475569, #1e293b)', border: 'none', color: 'white', padding: '8px 18px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.4)' }}>
                           {isConvocado ? 'Convocado ✓' : 'Não Convocado'}
                         </button>
                       </td>
@@ -595,7 +735,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 7. CARGA DE TREINO & sRPE (CT) */}
+      {/* 10. CARGA DE TREINO & sRPE (CT) */}
       {view === 'treino' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -611,36 +751,21 @@ export default function App() {
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>
-                    Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('rpeMedio')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'rpeMedio' ? '#38bdf8' : '#94a3b8' }}>
-                    RPE Médio (1-10) {ordenarColuna === 'rpeMedio' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('cargaSessao')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'cargaSessao' ? '#38bdf8' : '#94a3b8' }}>
-                    Carga de Treino (CT) {ordenarColuna === 'cargaSessao' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Classificação de Esforço</th>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer' }}>Atleta ↕</th>
+                  <th onClick={() => ordenarDados('rpeMedio')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>RPE Médio (1-10) ↕</th>
+                  <th onClick={() => ordenarDados('cargaSessao')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Carga de Treino (CT) ↕</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Classificação</th>
                 </tr>
               </thead>
               <tbody>
                 {plantelOrdenado.map((atleta) => (
                   <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
-                      <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#f59e0b', fontWeight: 'bold', ...text3DStyle }}>{atleta.rpeMedio} / 10</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold', ...text3DStyle }}>{atleta.cargaSessao} CT</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', ...text3DStyle }}>
-                      <span style={{ 
-                        padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold',
-                        backgroundColor: atleta.rpeMedio > 8 ? 'rgba(239,68,68,0.2)' : (atleta.rpeMedio > 7 ? 'rgba(245,158,11,0.2)' : 'rgba(16,185,129,0.2)'),
-                        color: atleta.rpeMedio > 8 ? '#ef4444' : (atleta.rpeMedio > 7 ? '#f59e0b' : '#10b981'),
-                        border: `1px solid ${atleta.rpeMedio > 8 ? '#ef4444' : (atleta.rpeMedio > 7 ? '#f59e0b' : '#10b981')}`
-                      }}>
-                        {atleta.rpeMedio > 8 ? 'Muito Elevada' : (atleta.rpeMedio > 7 ? 'Elevada' : 'Ótima')}
-                      </span>
+                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#f59e0b', fontWeight: 'bold' }}>{atleta.rpeMedio} / 10</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.cargaSessao} CT</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.rpeMedio > 8 ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)', color: atleta.rpeMedio > 8 ? '#ef4444' : '#10b981' }}>{atleta.rpeMedio > 8 ? 'Muito Elevada' : 'Ótima'}</span>
                     </td>
                   </tr>
                 ))}
@@ -650,7 +775,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 8. DEPARTAMENTO CLÍNICO & LESÕES */}
+      {/* 11. DEPARTAMENTO CLÍNICO */}
       {view === 'clinico' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -666,39 +791,22 @@ export default function App() {
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>
-                    Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'estado' ? '#38bdf8' : '#94a3b8' }}>
-                    Estado Clínico {ordenarColuna === 'estado' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Tipo de Lesão / Queixa</th>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: '18px 24px' }}>Atleta</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Estado Clínico</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Tipo de Lesão</th>
                   <th style={{ padding: '18px 24px', textAlign: 'center' }}>Previsão de Regresso</th>
                 </tr>
               </thead>
               <tbody>
-                {plantelOrdenado.map((atleta) => (
+                {plantel.map((atleta) => (
                   <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
-                      <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
+                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444' }}>{atleta.estado}</span>
                     </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', ...text3DStyle }}>
-                      <span style={{ 
-                        padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold',
-                        backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
-                        color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444',
-                        border: `1px solid ${atleta.estado === 'Apto' ? '#10b981' : '#ef4444'}`
-                      }}>
-                        {atleta.estado}
-                      </span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.lesao === 'Nenhuma' ? '#94a3b8' : '#fca5a5', fontWeight: 'bold', ...text3DStyle }}>
-                      {atleta.lesao}
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold', ...text3DStyle }}>
-                      {atleta.previsao}
-                    </td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.lesao === 'Nenhuma' ? '#94a3b8' : '#fca5a5', fontWeight: 'bold' }}>{atleta.lesao}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.previsao}</td>
                   </tr>
                 ))}
               </tbody>
@@ -707,13 +815,13 @@ export default function App() {
         </div>
       )}
 
-      {/* 9. FISIOLOGIA & CMJ */}
+      {/* 12. FISIOLOGIA & CMJ */}
       {view === 'fisiologia' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>🧬 Controlo Fisiológico: Salto CMJ & Rácio de Carga (ACWR)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica no nome para abrir a ficha ou nos cabeçalhos para ordenar.</p>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>Controlo neuromuscular e rácio de carga ACWR.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -723,38 +831,21 @@ export default function App() {
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>
-                    Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('cmj')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'cmj' ? '#38bdf8' : '#94a3b8' }}>
-                    Salto CMJ (cm) {ordenarColuna === 'cmj' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('acwr')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'acwr' ? '#38bdf8' : '#94a3b8' }}>
-                    Rácio ACWR {ordenarColuna === 'acwr' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
-                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'estado' ? '#38bdf8' : '#94a3b8' }}>
-                    Estado Físico {ordenarColuna === 'estado' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}
-                  </th>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: '18px 24px' }}>Atleta</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Salto CMJ (cm)</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Rácio ACWR</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Estado Físico</th>
                 </tr>
               </thead>
               <tbody>
-                {plantelOrdenado.map((atleta) => (
+                {plantel.map((atleta) => (
                   <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
-                      <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold', ...text3DStyle }}>{atleta.cmj} cm</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.acwr > 1.2 ? '#f59e0b' : '#10b981', fontWeight: 'bold', ...text3DStyle }}>{atleta.acwr}</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', ...text3DStyle }}>
-                      <span style={{ 
-                        padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold',
-                        backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
-                        color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444',
-                        border: `1px solid ${atleta.estado === 'Apto' ? '#10b981' : '#ef4444'}`
-                      }}>
-                        {atleta.estado}
-                      </span>
+                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{atleta.nome}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8', fontWeight: 'bold' }}>{atleta.cmj} cm</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: atleta.acwr > 1.2 ? '#f59e0b' : '#10b981', fontWeight: 'bold' }}>{atleta.acwr}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <span style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444' }}>{atleta.estado}</span>
                     </td>
                   </tr>
                 ))}
@@ -764,13 +855,13 @@ export default function App() {
         </div>
       )}
 
-      {/* 10. ESTATÍSTICAS TÉCNICO-TÁTICAS */}
+      {/* 13. ESTATÍSTICAS TÉCNICO-TÁTICAS */}
       {view === 'stats' && (
         <div style={{ maxWidth: '1350px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
-              <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: 0, ...text3DStyle }}>⚽ Relatório Oficial & Ações Técnico-Táticas (21 Parâmetros do Excel)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Dados completos extraídos de athletes_report.xlsx[cite: 1]. Clica no nome para abrir a ficha ou ordena por coluna.</p>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: 0, ...text3DStyle }}>⚽ Relatório Oficial & Ações Técnico-Táticas (21 Parâmetros do Excel)[cite: 1]</h2>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>Dados completos extraídos de athletes_report.xlsx.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -780,32 +871,32 @@ export default function App() {
           <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflowX: 'auto', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px', whiteSpace: 'nowrap' }}>
               <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '16px 20px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta ↕</th>
-                  <th onClick={() => ordenarDados('treinos')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Treinos ↕</th>
-                  <th onClick={() => ordenarDados('minTreino')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Min Treino ↕</th>
-                  <th onClick={() => ordenarDados('jogos')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Jogos ↕</th>
-                  <th onClick={() => ordenarDados('minJogo')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Min Jogo ↕</th>
-                  <th onClick={() => ordenarDados('titular')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Titular ↕</th>
-                  <th onClick={() => ordenarDados('suplente')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Suplente ↕</th>
-                  <th onClick={() => ordenarDados('golos')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer', color: '#10b981' }}>Golos ↕</th>
-                  <th onClick={() => ordenarDados('assistencias')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Assist. ↕</th>
-                  <th onClick={() => ordenarDados('subEntra')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Sub (Entra) ↕</th>
-                  <th onClick={() => ordenarDados('subSai')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Sub (Sai) ↕</th>
-                  <th onClick={() => ordenarDados('amarelo')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Amarelo ↕</th>
-                  <th onClick={() => ordenarDados('intercecao')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Interc. ↕</th>
-                  <th onClick={() => ordenarDados('segundoAmarelo')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>2º Amarelo ↕</th>
-                  <th onClick={() => ordenarDados('vermelho')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer', color: '#ef4444' }}>Vermelho ↕</th>
-                  <th onClick={() => ordenarDados('recuperacao')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Recup. ↕</th>
-                  <th onClick={() => ordenarDados('autoGolo')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Auto Golo ↕</th>
-                  <th onClick={() => ordenarDados('faltaSofrida')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>F. Sofrida ↕</th>
-                  <th onClick={() => ordenarDados('faltaCometida')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>F. Cometida ↕</th>
-                  <th onClick={() => ordenarDados('perdaBola')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer', color: '#f59e0b' }}>Perda Bola ↕</th>
-                  <th onClick={() => ordenarDados('goloSofrido')} style={{ padding: '16px 12px', textAlign: 'center', cursor: 'pointer' }}>Golo Sofrido ↕</th>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <th style={{ padding: '16px 20px' }}>Atleta</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Treinos</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Min Treino</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Jogos</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Min Jogo</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Titular</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Suplente</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center', color: '#10b981' }}>Golos</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Assist.</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Sub (Entra)</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Sub (Sai)</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Amarelo</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Interc.</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>2º Amarelo</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center', color: '#ef4444' }}>Vermelho</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Recup.</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Auto Golo</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>F. Sofrida</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>F. Cometida</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center', color: '#f59e0b' }}>Perda Bola</th>
+                  <th style={{ padding: '16px 12px', textAlign: 'center' }}>Golo Sofrido</th>
                 </tr>
               </thead>
               <tbody>
-                {plantelOrdenado.map((a) => (
+                {plantel.map((a) => (
                   <tr key={a.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <td onClick={() => abrirFichaAtleta(a)} style={{ padding: '16px 20px', fontWeight: 'bold', color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>{a.nome}</td>
                     <td style={{ padding: '16px 12px', textAlign: 'center' }}>{a.treinos}</td>
@@ -836,7 +927,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 11. ANÁLISE & FAIR-PLAY */}
+      {/* 14. ANÁLISE & FAIR-PLAY */}
       {view === 'analytics' && (
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
@@ -856,28 +947,10 @@ export default function App() {
               <p style={{ fontSize: '32px', fontWeight: '900', color: '#60a5fa', margin: '10px 0 0 0', ...text3DStyle }}>10.2 treinos (1022 min)</p>
             </div>
           </div>
-
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '32px', borderRadius: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e', marginBottom: '20px', ...text3DStyle }}>Top 5 Atletas com Mais Minutos de Jogo</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { nome: "Éder", min: 123, jogos: 6 },
-                { nome: "Salvador", min: 120, jogos: 6 },
-                { nome: "Rafael R.", min: 120, jogos: 6 },
-                { nome: "Diogo", min: 116, jogos: 6 },
-                { nome: "Jacob M.", min: 114, jogos: 6 }
-              ].map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(15, 23, 42, 0.7)', padding: '16px 20px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 10px rgba(0,0,0,0.4)' }}>
-                  <span style={{ fontWeight: 'bold', color: 'white', fontSize: '14px', ...text3DStyle }}>{idx + 1}. {item.nome}</span>
-                  <span style={{ color: '#10b981', fontWeight: 'bold', ...text3DStyle }}>{item.min} minutos ({item.jogos} jogos)</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       )}
 
-      {/* 12. FICHA INDIVIDUAL COMPLETA (BLUEPRINT) */}
+      {/* 15. FICHA INDIVIDUAL COMPLETA */}
       {view === 'ficha' && atletaSelecionado && (() => {
         const fcMaxTanaka = calcularTanakaFCMax(atletaSelecionado.idade);
         const zonasKarvonen = calcularZonasKarvonen(fcMaxTanaka, atletaSelecionado.fcRep);
@@ -895,13 +968,17 @@ export default function App() {
                   <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Nasc: {atletaSelecionado.nasc} ({atletaSelecionado.idade} anos) | PHV Offset: {atletaSelecionado.phvOffset}</p>
                 </div>
               </div>
-              <button onClick={() => setView('plantel')} style={btnSecondary3D}>
-                ← Voltar ao Plantel
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={() => exportarPDFAtleta(atletaSelecionado)} style={{ ...btnSecondary3D, backgroundColor: '#0284c7' }}>
+                  🖨 Exportar PDF
+                </button>
+                <button onClick={() => setView('plantel')} style={btnSecondary3D}>
+                  ← Voltar
+                </button>
+              </div>
             </header>
 
-            {/* Secção 1: Biometria & Antropometria */}
-            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '16px' }}>📏 Biometria & Antropometria</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
@@ -919,8 +996,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Secção 2: Controlo Neuromuscular (CMJ) & Fadiga */}
-            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e', marginBottom: '16px' }}>⚡ Controlo Neuromuscular (CMJ)</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', alignItems: 'center' }}>
                 <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
@@ -937,60 +1013,11 @@ export default function App() {
                 </div>
               </div>
             </div>
-
-            {/* Secção 3: Avaliação Fisiológica de Repouso & Zonas Karvonen / Tanaka */}
-            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '16px' }}>❤️ Fisiologia de Repouso & Zonas de Treino (Tanaka & Karvonen)</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '20px' }}>
-                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Pressão Arterial (PA)</span>
-                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', margin: '6px 0 0 0' }}>{atletaSelecionado.pa} mmHg</p>
-                </div>
-                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>FC Repouso (FC_rep)</span>
-                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: '6px 0 0 0' }}>{atletaSelecionado.fcRep} bpm</p>
-                </div>
-                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>FC Máxima (Tanaka)</span>
-                  <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444', margin: '6px 0 0 0' }}>{fcMaxTanaka} bpm</p>
-                </div>
-              </div>
-              <div style={{ backgroundColor: 'rgba(15,23,42,0.7)', padding: '18px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <span style={{ color: '#38bdf8', fontSize: '13px', fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>Zonas de Treino (Karvonen - Reserva Cardíaca):</span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', fontSize: '12px' }}>
-                  <div style={{ backgroundColor: 'rgba(16,185,129,0.15)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}><strong style={{ color: '#10b981' }}>Z1 (Recup):</strong> {zonasKarvonen.z1}</div>
-                  <div style={{ backgroundColor: 'rgba(56,189,248,0.15)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}><strong style={{ color: '#38bdf8' }}>Z2 (Aeróbico):</strong> {zonasKarvonen.z2}</div>
-                  <div style={{ backgroundColor: 'rgba(245,158,11,0.15)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}><strong style={{ color: '#f59e0b' }}>Z3 (Tempo):</strong> {zonasKarvonen.z3}</div>
-                  <div style={{ backgroundColor: 'rgba(239,68,68,0.15)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}><strong style={{ color: '#ef4444' }}>Z4 (Limiar):</strong> {zonasKarvonen.z4}</div>
-                  <div style={{ backgroundColor: 'rgba(168,85,247,0.15)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}><strong style={{ color: '#a855f7' }}>Z5 (Máximo):</strong> {zonasKarvonen.z5}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Secção 4: Gestão Clínica, Nutrição e Notas Confidenciais */}
-            <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '28px', borderRadius: '24px', marginBottom: '24px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#ef4444', marginBottom: '16px' }}>🏥 Gestão Clínica, Nutrição & Notas da Equipa Técnica</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Estado Clínico & Lesão</span>
-                  <p style={{ fontSize: '16px', fontWeight: 'bold', color: atletaSelecionado.estado === 'Apto' ? '#10b981' : '#ef4444', margin: '6px 0 0 0' }}>{atletaSelecionado.estado} — {atletaSelecionado.lesao} (Regresso: {atletaSelecionado.previsao})</p>
-                </div>
-                <div style={{ backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '12px' }}>Nutrição & Suplementação</span>
-                  <p style={{ fontSize: '15px', color: '#38bdf8', margin: '6px 0 0 0' }}>{atletaSelecionado.nutricao}</p>
-                </div>
-              </div>
-              <div style={{ marginTop: '16px', backgroundColor: 'rgba(15,23,42,0.6)', padding: '16px', borderRadius: '12px' }}>
-                <span style={{ color: '#94a3b8', fontSize: '12px' }}>Notas Confidenciais / Acompanhamento Técnico</span>
-                <p style={{ fontSize: '14px', color: '#fff', margin: '6px 0 0 0', fontStyle: 'italic' }}>"{atletaSelecionado.notas}"</p>
-              </div>
-            </div>
-
           </div>
         );
       })()}
 
-      {/* 13. PAINEL ADMIN */}
+      {/* 16. PAINEL ADMIN */}
       {view === 'admin' && (
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>

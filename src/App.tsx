@@ -10,9 +10,30 @@ export default function App() {
   const [utilizadorLogado, setUtilizadorLogado] = useState<any>(null);
   const [atletaSelecionado, setAtletaSelecionado] = useState<any>(null);
 
-  // Estados para ordenação de colunas
+  // Estados globais para ordenação de colunas em cada tabela
   const [ordenarColuna, setOrdenarColuna] = useState<string>('nome');
   const [direcaoOrdem, setDirecaoOrdem] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaPMC, setOrdenarColunaPMC] = useState<string>('nome');
+  const [direcaoOrdemPMC, setDirecaoOrdemPMC] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaCal, setOrdenarColunaCal] = useState<string>('data');
+  const [direcaoOrdemCal, setDirecaoOrdemCal] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaClinico, setOrdenarColunaClinico] = useState<string>('nome');
+  const [direcaoOrdemClinico, setDirecaoOrdemClinico] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaFis, setOrdenarColunaFis] = useState<string>('nome');
+  const [direcaoOrdemFis, setDirecaoOrdemFis] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaTreino, setOrdenarColunaTreino] = useState<string>('nome');
+  const [direcaoOrdemTreino, setDirecaoOrdemTreino] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaConv, setOrdenarColunaConv] = useState<string>('nome');
+  const [direcaoOrdemConv, setDirecaoOrdemConv] = useState<'asc' | 'desc'>('asc');
+
+  const [ordenarColunaStats, setOrdenarColunaStats] = useState<string>('nome');
+  const [direcaoOrdemStats, setDirecaoOrdemStats] = useState<'asc' | 'desc'>('asc');
 
   // Atletas convocados para o próximo jogo
   const [convocados, setConvocados] = useState<number[]>([5, 10, 18, 19, 22, 1, 4, 8, 12, 13, 15, 16, 17, 20]);
@@ -117,28 +138,137 @@ export default function App() {
     }
   };
 
-  const ordenarDados = (coluna: string) => {
-    if (ordenarColuna === coluna) {
-      setDirecaoOrdem(direcaoOrdem === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrdenarColuna(coluna);
-      setDirecaoOrdem('asc');
+  // Funções de ordenação dinâmica para cada tabela com colunas específicas
+  const ordenarDados = (coluna: string, tipoTabela: string = 'plantel') => {
+    if (tipoTabela === 'plantel') {
+      if (ordenarColuna === coluna) {
+        setDirecaoOrdem(direcaoOrdem === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColuna(coluna);
+        setDirecaoOrdem('asc');
+      }
+    } else if (tipoTabela === 'pmc') {
+      if (ordenarColunaPMC === coluna) {
+        setDirecaoOrdemPMC(direcaoOrdemPMC === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaPMC(coluna);
+        setDirecaoOrdemPMC('asc');
+      }
+    } else if (tipoTabela === 'calendario') {
+      if (ordenarColunaCal === coluna) {
+        setDirecaoOrdemCal(direcaoOrdemCal === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaCal(coluna);
+        setDirecaoOrdemCal('asc');
+      }
+    } else if (tipoTabela === 'clinico') {
+      if (ordenarColunaClinico === coluna) {
+        setDirecaoOrdemClinico(direcaoOrdemClinico === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaClinico(coluna);
+        setDirecaoOrdemClinico('asc');
+      }
+    } else if (tipoTabela === 'fisiologia') {
+      if (ordenarColunaFis === coluna) {
+        setDirecaoOrdemFis(direcaoOrdemFis === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaFis(coluna);
+        setDirecaoOrdemFis('asc');
+      }
+    } else if (tipoTabela === 'treino') {
+      if (ordenarColunaTreino === coluna) {
+        setDirecaoOrdemTreino(direcaoOrdemTreino === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaTreino(coluna);
+        setDirecaoOrdemTreino('asc');
+      }
+    } else if (tipoTabela === 'convocatoria') {
+      if (ordenarColunaConv === coluna) {
+        setDirecaoOrdemConv(direcaoOrdemConv === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaConv(coluna);
+        setDirecaoOrdemConv('asc');
+      }
+    } else if (tipoTabela === 'stats') {
+      if (ordenarColunaStats === coluna) {
+        setDirecaoOrdemStats(direcaoOrdemStats === 'asc' ? 'desc' : 'asc');
+      } else {
+        setOrdenarColunaStats(coluna);
+        setDirecaoOrdemStats('asc');
+      }
     }
   };
 
   const plantelOrdenado = [...plantel].sort((a: any, b: any) => {
     let valorA = a[ordenarColuna];
     let valorB = b[ordenarColuna];
-
     if (typeof valorA === 'string') {
-      return direcaoOrdem === 'asc' 
-        ? valorA.localeCompare(valorB) 
-        : valorB.localeCompare(valorA);
-    } else {
-      return direcaoOrdem === 'asc' 
-        ? valorA - valorB 
-        : valorB - valorA;
+      return direcaoOrdem === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
     }
+    return direcaoOrdem === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoPMC = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaPMC];
+    let valorB = b[ordenarColunaPMC];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemPMC === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemPMC === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const calendarioOrdenado = [...calendarioSessoes].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaCal];
+    let valorB = b[ordenarColunaCal];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemCal === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemCal === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoClinico = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaClinico];
+    let valorB = b[ordenarColunaClinico];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemClinico === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemClinico === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoFis = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaFis];
+    let valorB = b[ordenarColunaFis];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemFis === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemFis === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoTreino = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaTreino];
+    let valorB = b[ordenarColunaTreino];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemTreino === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemTreino === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoConv = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaConv];
+    let valorB = b[ordenarColunaConv];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemConv === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemConv === 'asc' ? valorA - valorB : valorB - valorA;
+  });
+
+  const plantelOrdenadoStats = [...plantel].sort((a: any, b: any) => {
+    let valorA = a[ordenarColunaStats];
+    let valorB = b[ordenarColunaStats];
+    if (typeof valorA === 'string') {
+      return direcaoOrdemStats === 'asc' ? valorA.localeCompare(valorB) : valorB.localeCompare(valorA);
+    }
+    return direcaoOrdemStats === 'asc' ? valorA - valorB : valorB - valorA;
   });
 
   const abrirFichaAtleta = (atleta: any) => {
@@ -177,7 +307,7 @@ export default function App() {
 
   const simularAtualizacaoDados = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Módulo Update executado com sucesso! Dados sincronizados com o relatório athletes_report.xlsx[cite: 1] e exportados.');
+    alert('Módulo Update executado com sucesso! Dados sincronizados com o relatório athletes_report.xlsx e exportados.');
     setView('dashboard');
   };
 
@@ -434,6 +564,12 @@ export default function App() {
                 <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Gestão de convocados para o próximo jogo e alinhamento.</p>
               </div>
 
+              <div onClick={() => setView('treino')} style={cardModuleStyle}>
+                <div style={{ fontSize: '42px', marginBottom: '14px' }}>⚡</div>
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '10px', ...text3DStyle }}>Carga & sRPE (CT)</h3>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0, ...text3DStyle }}>Monitorização de esforço, Carga de Treino (CT) e prontidão.</p>
+              </div>
+
               <div onClick={() => setView('clinico')} style={cardModuleStyle}>
                 <div style={{ fontSize: '42px', marginBottom: '14px' }}>🏥</div>
                 <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ef4444', marginBottom: '10px', ...text3DStyle }}>Departamento Clínico</h3>
@@ -451,13 +587,13 @@ export default function App() {
         </div>
       )}
 
-      {/* MÓDULO 1: MOTOR PMC & ALERTA ACWR */}
+      {/* MÓDULO 1: MOTOR PMC & ACWR (COM FILTROS DE ORDENAÇÃO) */}
       {view === 'pmc' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>📈 Motor PMC (Performance Management Chart) & ACWR</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Monitorização longitudinal de Fitness (CTL), Fadiga (ATL), TSB e Alerta de Risco de Lesão (&gt; 1.5)[cite: 5].</p>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por Fitness, Fadiga ou ACWR.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -468,16 +604,16 @@ export default function App() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: '18px 24px' }}>Atleta</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Fitness (CTL - 42d)[cite: 5]</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Fadiga (ATL - 7d)[cite: 5]</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Forma / Balanço (TSB)[cite: 5]</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Rácio ACWR[cite: 5]</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Alerta Preditivo de Lesão[cite: 5]</th>
+                  <th onClick={() => ordenarDados('nome', 'pmc')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaPMC === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta {ordenarColunaPMC === 'nome' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('ctl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'ctl' ? '#38bdf8' : '#94a3b8' }}>Fitness (CTL - 42d) {ordenarColunaPMC === 'ctl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('atl', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'atl' ? '#38bdf8' : '#94a3b8' }}>Fadiga (ATL - 7d) {ordenarColunaPMC === 'atl' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('tsb', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'tsb' ? '#38bdf8' : '#94a3b8' }}>Forma / Balanço (TSB) {ordenarColunaPMC === 'tsb' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('acwr', 'pmc')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaPMC === 'acwr' ? '#38bdf8' : '#94a3b8' }}>Rácio ACWR {ordenarColunaPMC === 'acwr' ? (direcaoOrdemPMC === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Alerta Preditivo de Lesão</th>
                 </tr>
               </thead>
               <tbody>
-                {plantel.map((atleta) => {
+                {plantelOrdenadoPMC.map((atleta) => {
                   const riscoLesao = atleta.acwr > 1.5;
                   return (
                     <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', backgroundColor: riscoLesao ? 'rgba(239,68,68,0.08)' : 'transparent' }}>
@@ -500,13 +636,13 @@ export default function App() {
         </div>
       )}
 
-      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL E SESSÕES */}
+      {/* MÓDULO 2: CALENDÁRIO OPERACIONAL (COM FILTROS DE ORDENAÇÃO) */}
       {view === 'calendario' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
             <div>
               <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', margin: 0, ...text3DStyle }}>📅 Calendário Operacional & Gestão de Sessões</h2>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>Gestão semanal de treinos, descanso (TSS=0) e diferenciação competitiva (Jogos Oficiais vs Amigáveis)[cite: 5].</p>
+              <p style={{ color: '#94a3b8', fontSize: '12px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos da tabela para ordenar por data, tipo ou carga TSS.</p>
             </div>
             <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
               ← Voltar à Área de Trabalho
@@ -525,13 +661,13 @@ export default function App() {
                 <select value={novoTreino.tipo} onChange={(e) => setNovoTreino({...novoTreino, tipo: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }}>
                   <option value="Treino Tático">Treino Tático</option>
                   <option value="Treino Físico (Força/CMJ)">Treino Físico (Força/CMJ)</option>
-                  <option value="Descanso Total">Descanso Total (TSS = 0)[cite: 5]</option>
-                  <option value="Jogo Oficial">Jogo Oficial (Pico / Tapering)[cite: 5]</option>
-                  <option value="Jogo Amigável / Treino">Jogo Amigável / Treino (Rotação)[cite: 5]</option>
+                  <option value="Descanso Total">Descanso Total (TSS = 0)</option>
+                  <option value="Jogo Oficial">Jogo Oficial (Pico / Tapering)</option>
+                  <option value="Jogo Amigável / Treino">Jogo Amigável / Treino (Rotação)</option>
                 </select>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Carga TSS[cite: 5]</label>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Carga TSS</label>
                 <input type="number" value={novoTreino.tss} onChange={(e) => setNovoTreino({...novoTreino, tss: Number(e.target.value)})} required style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', borderRadius: '10px' }} />
               </div>
               <div>
@@ -549,23 +685,80 @@ export default function App() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', marginTop: '16px' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <th style={{ padding: '18px 24px' }}>Data</th>
-                  <th style={{ padding: '18px 24px' }}>Tipo de Sessão</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Carga TSS[cite: 5]</th>
+                  <th onClick={() => ordenarDados('data', 'calendario')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaCal === 'data' ? '#38bdf8' : '#94a3b8' }}>Data {ordenarColunaCal === 'data' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('tipo', 'calendario')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColunaCal === 'tipo' ? '#38bdf8' : '#94a3b8' }}>Tipo de Sessão {ordenarColunaCal === 'tipo' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('tss', 'calendario')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColunaCal === 'tss' ? '#38bdf8' : '#94a3b8' }}>Carga TSS {ordenarColunaCal === 'tss' ? (direcaoOrdemCal === 'asc' ? '▲' : '▼') : '↕'}</th>
                   <th style={{ padding: '18px 24px' }}>Foco Operacional</th>
                 </tr>
               </thead>
               <tbody>
-                {calendarioSessoes.map((sessao) => (
+                {calendarioOrdenado.map((sessao) => (
                   <tr key={sessao.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <td style={{ padding: '18px 24px', color: '#38bdf8', fontWeight: 'bold' }}>{sessao.data}</td>
                     <td style={{ padding: '18px 24px', fontWeight: 'bold', color: sessao.tipo.includes('Jogo Oficial') ? '#22c55e' : (sessao.tipo.includes('Descanso') ? '#64748b' : '#f59e0b') }}>
                       {sessao.tipo}
                     </td>
                     <td style={{ padding: '18px 24px', textAlign: 'center', fontWeight: 'bold', color: sessao.tss === 0 ? '#94a3b8' : '#fff' }}>
-                      {sessao.tss} TSS {sessao.tss === 0 && '(Descanso)[cite: 5]'}
+                      {sessao.tss} TSS {sessao.tss === 0 && '(Descanso)'}
                     </td>
                     <td style={{ padding: '18px 24px', color: '#cbd5e1' }}>{sessao.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* 4. GESTÃO DE PLANTEL */}
+      {view === 'plantel' && (
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>👥 Plantel Oficial (22 Atletas)</h2>
+              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica nos cabeçalhos para ordenar por atleta, posição, peso, altura ou estado.</p>
+            </div>
+            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
+              ← Voltar à Área de Trabalho
+            </button>
+          </header>
+
+          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
+                  <th onClick={() => ordenarDados('nome', 'plantel')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta {ordenarColuna === 'nome' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('posicao', 'plantel')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'posicao' ? '#38bdf8' : '#94a3b8' }}>Posição {ordenarColuna === 'posicao' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('peso', 'plantel')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'peso' ? '#38bdf8' : '#94a3b8' }}>Peso (kg) {ordenarColuna === 'peso' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('altura', 'plantel')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'altura' ? '#38bdf8' : '#94a3b8' }}>Altura (m) {ordenarColuna === 'altura' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th onClick={() => ordenarDados('estado', 'plantel')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer', color: ordenarColuna === 'estado' ? '#38bdf8' : '#94a3b8' }}>Estado {ordenarColuna === 'estado' ? (direcaoOrdem === 'asc' ? '▲' : '▼') : '↕'}</th>
+                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {plantelOrdenado.map((atleta) => (
+                  <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
+                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 10px #22c55e' }}></div>
+                      <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
+                    </td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8' }}>{atleta.posicao}</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{atleta.peso} kg</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#60a5fa' }}>{atleta.altura} m</td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <span style={{ 
+                        padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold',
+                        backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
+                        color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444'
+                      }}>
+                        {atleta.estado}
+                      </span>
+                    </td>
+                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
+                      <button onClick={() => abrirFichaAtleta(atleta)} style={{ backgroundColor: '#15803d', backgroundImage: 'linear-gradient(to bottom, #22c55e, #15803d)', border: 'none', borderBottom: '2px solid #064e3b', color: 'white', padding: '8px 16px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.4)', ...text3DStyle }}>
+                        Ver Ficha
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -606,63 +799,6 @@ export default function App() {
                 Descarregar Excel
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 4. GESTÃO DE PLANTEL */}
-      {view === 'plantel' && (
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', padding: '24px 32px', borderRadius: '24px', marginBottom: '28px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.8)' }}>
-            <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#38bdf8', margin: 0, ...text3DStyle }}>👥 Plantel Oficial (22 Atletas)</h2>
-              <p style={{ color: '#94a3b8', fontSize: '11px', margin: '4px 0 0 0', ...text3DStyle }}>💡 Clica no nome do atleta para abrir a Ficha Individual completa.</p>
-            </div>
-            <button onClick={() => setView('dashboard')} style={btnSecondary3D}>
-              ← Voltar à Área de Trabalho
-            </button>
-          </header>
-
-          <div style={{ backgroundColor: config.cardColor, backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-              <thead>
-                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.75)', color: '#94a3b8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.08)', ...text3DStyle }}>
-                  <th onClick={() => ordenarDados('nome')} style={{ padding: '18px 24px', cursor: 'pointer', color: ordenarColuna === 'nome' ? '#38bdf8' : '#94a3b8' }}>Atleta ↕</th>
-                  <th onClick={() => ordenarDados('posicao')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Posição ↕</th>
-                  <th onClick={() => ordenarDados('peso')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Peso (kg) ↕</th>
-                  <th onClick={() => ordenarDados('altura')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Altura (m) ↕</th>
-                  <th onClick={() => ordenarDados('estado')} style={{ padding: '18px 24px', textAlign: 'center', cursor: 'pointer' }}>Estado ↕</th>
-                  <th style={{ padding: '18px 24px', textAlign: 'center' }}>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {plantelOrdenado.map((atleta) => (
-                  <tr key={atleta.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td onClick={() => abrirFichaAtleta(atleta)} style={{ padding: '18px 24px', fontWeight: 'bold', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', ...text3DStyle }} title="Ver Ficha Individual">
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', boxShadow: '0 0 10px #22c55e' }}></div>
-                      <span style={{ textDecoration: 'underline' }}>{atleta.nome}</span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#38bdf8' }}>{atleta.posicao}</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>{atleta.peso} kg</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center', color: '#60a5fa' }}>{atleta.altura} m</td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
-                      <span style={{ 
-                        padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold',
-                        backgroundColor: atleta.estado === 'Apto' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
-                        color: atleta.estado === 'Apto' ? '#10b981' : '#ef4444'
-                      }}>
-                        {atleta.estado}
-                      </span>
-                    </td>
-                    <td style={{ padding: '18px 24px', textAlign: 'center' }}>
-                      <button onClick={() => abrirFichaAtleta(atleta)} style={{ backgroundColor: '#15803d', backgroundImage: 'linear-gradient(to bottom, #22c55e, #15803d)', border: 'none', borderBottom: '2px solid #064e3b', color: 'white', padding: '8px 16px', borderRadius: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.4)', ...text3DStyle }}>
-                        Ver Ficha
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       )}
